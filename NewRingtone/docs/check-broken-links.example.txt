@@ -1,0 +1,9 @@
+# Пример файла путей для проверки битых ссылок (по одному на строку).
+# Можно указывать путь от корня или полный URL.
+# Строки, начинающиеся с #, игнорируются.
+
+/
+/play/anzhela-katis.html
+/play/super-rington-klassika-privet-morrikone.html
+/category/na-vraga.html
+/page/programma-dlja-sozdanija-ringtonov.html

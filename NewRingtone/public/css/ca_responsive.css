@@ -1,0 +1,128 @@
+/* Адаптация под разные дисплеи (старый сайт template3) */
+
+/* ПК: экраны от 1300px — на весь экран, рингтоны в 2 колонки */
+@media (min-width: 1300px) {
+	.container { max-width: 95vw; }
+	.srch_st {display:none;}
+	.mobil-plan {display:none !important;}
+	a.btn-pressed, a.nav-btn {border-bottom: 1px solid #2A597D;}
+	.aduio_player {width:46% !important;display:inline-block;vertical-align:top;}
+	.info_to_range, .play_l_btn {width: 8% !important;}
+	.info_to_range {width: 60% !important;}
+	.info_to_range header{max-width: 100% !important;}
+	.aduio_player a.dwnld span {display:none;}
+	.slider-range-max {width: 72% !important;}
+	.slider-volume {width:20% !important;}
+}
+
+/* 1199–1299px */
+@media (min-width: 1199px) and (max-width: 1299px) {
+	.srch_st {display:none;}
+	.mobil-plan {display:none !important;}
+	a.btn-pressed, a.nav-btn {border-bottom: 1px solid #2A597D;}
+}
+
+/* 979–1199px */
+@media (min-width: 979px) and (max-width: 1199px) {
+	.container {max-width:960px;}
+	.content-tc {margin-left: 92px;}
+	.aside {flex: 0 0 205px; width: 205px;}
+	.collapse-nav-cat {max-height: calc(100vh - 180px);}
+	.slider-range-max {width: 280px;}
+	.srch_st {display:none;}
+	.banner-gorizon img{width:100%;}
+	.mobil-plan {display:none !important;}
+	.info_to_range header {max-width: 340px;}
+	a.btn-pressed, a.nav-btn {border-bottom: 1px solid #2A597D;}
+}
+
+/* На ПК и планшете категории в сайдбаре всегда видны (не уезжают влево) */
+@media (min-width: 979px) {
+	.collapse-nav-cat { margin-left: 0 !important; }
+}
+
+/* 768–979px */
+@media (min-width: 768px) and (max-width: 979px) {
+	.container {max-width:760px;}
+	.main-row {flex-wrap: wrap;}
+	.content-tc {flex: 1 1 100%;padding-top: 68px;margin-left: 92px;margin-bottom: 0;}
+	.aside {flex: 1 1 100%;width: 100%;padding-top: 10px;margin-left: 92px;margin-bottom: 30px;border-left: none;}
+	.collapse-nav-cat {max-height: none;}
+	.musicians {padding: 16px 0px;}
+	.musicians figure {width: 77px;}
+	.collapse-nav-cat {font-family: 'Roboto', sans-serif;overflow-y:auto;width:280px;list-style:none;position:fixed;background: #F7F7F7;top:0px;bottom:0px;height:100%;margin-left: -300px;z-index:50;}
+	.collapse-nav-cat header{display:block;}
+	.info_to_range header {max-width: 345px;}
+	.slider-range-max {width: 280px;}
+	.srch_st {display:none;}
+	.mobil-plan {display:none !important;}
+	a.btn-active {border-left: 3px solid #dd4f4f !important;}
+	.catasidex {display:block;}
+	.srch_street {display:none;}
+	.srch-mob {display:block;}
+	.srch-mob input {margin:20px 0px 20px;}
+	a.btn-pressed, a.nav-btn {border-bottom: 1px solid #2A597D;}
+	.aside_fix a.catasidex {border-bottom: 1px solid #2A597D;}
+}
+
+/* до 767px — мобильная версия */
+@media (max-width: 767px) {
+	.container {width:100%;max-width:100%;}
+	.main-row {flex-wrap: wrap;}
+	.top_line {background:#35546A;height: 48px;padding: 0;position:fixed;z-index:100;}
+	.user-menu a.ringing {padding: 14px;color: #FAFAFA;}
+	.user-menu a:hover.ringing {color: #4f9fdd;}
+	.text-logo {display:none;}
+	.srch_street {display:none;}
+	.brand {display:inline-block;height:46px;vertical-align:top;}
+	.aside_fix {display:none;}
+	.brand img{width:52px;}
+	.content-tc {flex: 1 1 100%;width: 93.5%;padding: 0;margin:0 20px;padding-top: 45px;}
+	.aside {flex: 1 1 100%;width: 93.5%;padding-top: 10px;margin:0 20px;border-left: none;}
+	.collapse-nav-cat {max-height: none;}
+	.musicians figure {width: 85px;}
+	a.dwnld span {display:none;}
+	footer {padding: 18px 20px;}
+	footer .copy {margin: 0;}
+	footer .createart {margin: 7px 0 0 0;}
+	.slider-range-max {width: 280px;}
+	.ofl {display:none;}
+	.srch_st {display:none;}
+	.mobil-plan {display:inline-block !important;vertical-align: top;}
+	.scroll_to_top {position:relative;top: initial;}
+	ul.effect-left-drop {margin:0;left:-72px;}
+	.fly_top_drop {top:48px;}
+	a.cat-btn {font-size:16px;color: #FAFAFA;padding:4px 10px;border-left: 1px solid #40647E;border-right: 1px solid #40647E;margin-left: -3px;}
+	a.cat-btn span{display:inline-block;}
+	a:hover.cat-btn {background:#354d61;}
+	.collapse-nav-cat {margin-top: 48px;display:block;list-style:none;position:fixed;background: #F7F7F7;top:0;bottom:0;height:100%;margin-left: -300px;z-index:50;}
+	.collapse-nav-cat header{display:none;}
+	span.otinder {display:none;}
+	.info_to_range header {max-width: 345px;}
+	.srch-mob {display:block;}
+	.srch-mob input {margin:20px 0px;}
+}
+
+@media (max-width: 480px) {
+	body {overflow-x:hidden;}
+	.container {width:100%;}
+	.text-logo {display:none;}
+	.content-tc {width:94%;margin:0 10px;padding-top: 68px;}
+	.aside {width: 94%;margin:0 10px;padding-top: 10px;}
+	.musicians figure {width: 85px;}
+	a.dwnld span {display:none;}
+	footer {padding: 18px 10px;}
+	footer .copy {margin: 0;}
+	footer .createart {margin: 7px 0 0 0;}
+	.slider-range-max {width:100px;}
+	.slider-volume {width:40px;}
+	.info_to_range {padding: 5px 13px 5px 0; margin: 0 10px 0 0;}
+	.srch_street, .ofl {display:none;}
+	.mobil-plan {display:inline-block !important;}
+	ul.effect-left-drop {margin:0;left:-72px;}
+	a.cat-btn {padding:4px 11px 4px 10px;}
+	a.cat-btn span{display:none;}
+	.info_to_range header {max-width: 150px;}
+	.aduio_player time {margin: 0 5px 0 0;}
+	.srch-mob input {width:98%;margin:0px 0px 10px 0;}
+}

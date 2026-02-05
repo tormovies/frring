@@ -1,0 +1,4 @@
+/* Локальные шрифты: системные Exo 2 и Roboto (без загрузки с Google). */
+/* При необходимости добавьте woff2 в public/fonts/ и раскомментируйте @font-face ниже. */
+body{font-family:'Exo 2',Roboto,sans-serif}
+h1,h2,h3,h4,h5,.logo_text{font-family:'Exo 2',sans-serif}

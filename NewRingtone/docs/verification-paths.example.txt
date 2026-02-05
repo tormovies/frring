@@ -1,0 +1,13 @@
+# Список путей для проверки verify:sites-seo (по одному на строку)
+# Скопируйте в verification-paths.txt и отредактируйте при необходимости.
+# Строки, начинающиеся с #, и пустые — игнорируются.
+
+/
+/category/na-vraga.html
+/category/klubnye.html
+/category/bez-slov.html
+/category/iz-filmov.html
+/category/tancevalnye.html
+/play/anzhela-katis.html
+/play/super-rington-klassika-privet-morrikone.html
+/page/programma-dlja-sozdanija-ringtonov.html

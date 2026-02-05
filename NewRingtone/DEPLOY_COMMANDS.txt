@@ -1,0 +1,33 @@
+# Команды для деплоя на neurozvuk.ru
+# Скопируйте и выполните по порядку в SSH терминале
+
+# 1. Подключитесь к серверу
+ssh user@neurozvuk.ru
+
+# 2. Перейдите в папку проекта
+cd ~/neurozvuk.ru/laravel/
+
+# 3. Проверьте текущую версию
+git log -1 --oneline
+
+# 4. Проверьте статус
+git status
+
+# 5. Получите обновления
+git pull origin master
+
+# 6. Очистите кеш (используем php8.3!)
+php8.3 artisan cache:clear
+php8.3 artisan config:clear
+php8.3 artisan view:clear
+php8.3 artisan route:clear
+
+# 7. Проверьте результат
+git log -1 --oneline
+# Должно показать: 2d89ed9 Update: Изменения в меню и увеличение количества материалов
+
+# 8. Перезапустите PHP-FPM (если есть права)
+sudo systemctl reload php-fpm
+
+# Готово! Откройте https://neurozvuk.ru и проверьте изменения
+
