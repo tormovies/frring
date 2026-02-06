@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     /**
-     * Парсинг path из URL: na-vraga, na-vraga-24, na-vraga-48-plays, na-vraga-0-rating.
+     * Парсинг path из URL: na-vraga, na-vraga-48-date, na-vraga-48-plays, na-vraga-48-rating.
+     * Формат slug-offset (без -date) не поддерживается — на него делается редирект.
      *
      * @return array{slug: string, offset: int, sort: string}
      */
@@ -28,7 +30,7 @@ class CategoryController extends Controller
             $slug = $m[1];
             $offset = (int) $m[2];
             $sort = 'rating';
-        } elseif (preg_match('/^(.+)-(\d+)$/', $path, $m)) {
+        } elseif (preg_match('/^(.+)-(\d+)-date$/', $path, $m)) {
             $slug = $m[1];
             $offset = (int) $m[2];
             $sort = 'new';
@@ -37,8 +39,13 @@ class CategoryController extends Controller
         return ['slug' => $slug, 'offset' => $offset, 'sort' => $sort];
     }
 
-    public function show(Request $request, string $path): Factory|View
+    public function show(Request $request, string $path): Factory|View|RedirectResponse
     {
+        // Неправильный формат slug-offset без -date → редирект на правильный slug-offset-date
+        if (preg_match('/^(.+)-(\d+)$/', $path, $m) && !str_ends_with($path, '-date')) {
+            return redirect()->to(url("/category/{$path}-date.html"), 301);
+        }
+
         $parsed = $this->parseCategoryPath($path);
         $slug = $parsed['slug'];
         $offset = $parsed['offset'];

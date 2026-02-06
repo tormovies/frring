@@ -35,7 +35,7 @@ if (!function_exists('sort_page_url')) {
 
         if ($context === 'main') {
             if ($sort === 'new') {
-                return $page <= 1 ? url('/') : url('/?' . http_build_query(['page' => $page]));
+                return $page <= 1 ? url('/') : url("/index-{$offset}-date.html");
             }
             if ($sort === 'plays') {
                 return url("/category/index-{$offset}-plays.html");
@@ -49,7 +49,7 @@ if (!function_exists('sort_page_url')) {
             if ($sort === 'new') {
                 return $offset === 0
                     ? url("/category/{$slug}.html")
-                    : url("/category/{$slug}-{$offset}.html");
+                    : url("/category/{$slug}-{$offset}-date.html");
             }
             if ($sort === 'plays') {
                 return url("/category/{$slug}-{$offset}-plays.html");
