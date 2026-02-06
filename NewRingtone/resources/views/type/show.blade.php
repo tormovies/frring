@@ -88,15 +88,17 @@
                                 <button class="btn btn-secondary btn-download-icon" disabled title="Нет файла">⬇</button>
                             @endif
 
-                            <div class="like-container">
-                                <button type="button"
-                                   class="like-btn {{ session()->has('liked_'.$material->id) ? 'liked' : '' }}"
+                            @php $isLiked = session()->has('liked_'.$material->id); @endphp
+                            <span class="rate_like {{ $isLiked ? 'likeRate' : '' }}">
+                                <button type="button" class="like-btn"
                                    data-like-url="{{ route('materials.like', $material->slug) }}"
                                    data-dislike-url="{{ route('materials.dislike', $material->slug) }}"
-                                   title="{{ session()->has('liked_'.$material->id) ? 'Убрать лайк' : 'Поставить лайк' }}"
-                                   aria-label="{{ session()->has('liked_'.$material->id) ? 'Убрать лайк' : 'Поставить лайк' }}">{{ session()->has('liked_'.$material->id) ? '♥' : '♡' }}</button>
+                                   title="{{ $isLiked ? 'Убрать лайк' : 'Поставить лайк' }}"
+                                   aria-label="{{ $isLiked ? 'Убрать лайк' : 'Поставить лайк' }}">
+                                    <i class="fa-heart {{ $isLiked ? 'fas' : 'far' }}"></i>
+                                </button>
                                 <span class="like-count">{{ $material->likes ?? 0 }}</span>
-                            </div>
+                            </span>
                         </div>
                     </div>
                 @empty
@@ -146,15 +148,17 @@
                             </div>
 
                             <div class="audio-actions-grid">
-                                <div class="audio-likes-grid">
-                                    <button type="button"
-                                       class="like-btn {{ session()->has('liked_'.$material->id) ? 'liked' : '' }}"
+                                @php $isLikedGrid = session()->has('liked_'.$material->id); @endphp
+                                <span class="rate_like {{ $isLikedGrid ? 'likeRate' : '' }}">
+                                    <button type="button" class="like-btn"
                                        data-like-url="{{ route('materials.like', $material->slug) }}"
                                        data-dislike-url="{{ route('materials.dislike', $material->slug) }}"
-                                       title="{{ session()->has('liked_'.$material->id) ? 'Убрать лайк' : 'Поставить лайк' }}"
-                                       aria-label="{{ session()->has('liked_'.$material->id) ? 'Убрать лайк' : 'Поставить лайк' }}">{{ session()->has('liked_'.$material->id) ? '♥' : '♡' }}</button>
-                                    <span class="like-count-grid">{{ $material->likes ?? 0 }}</span>
-                                </div>
+                                       title="{{ $isLikedGrid ? 'Убрать лайк' : 'Поставить лайк' }}"
+                                       aria-label="{{ $isLikedGrid ? 'Убрать лайк' : 'Поставить лайк' }}">
+                                        <i class="fa-heart {{ $isLikedGrid ? 'fas' : 'far' }}"></i>
+                                    </button>
+                                    <span class="like-count">{{ $material->likes ?? 0 }}</span>
+                                </span>
 
                                 @if($material->hasFile())
                                     <a href="{{ route('materials.download', [$material->slug, 'mp4']) }}"

@@ -81,7 +81,15 @@ const UI = {
 
             var liked = btn.classList.toggle('liked');
             var url = liked ? likeUrl : dislikeUrl;
-            btn.textContent = liked ? '\u2665' : '\u2661';
+            var icon = btn.querySelector('i.fa-heart');
+            if (icon) {
+                icon.classList.toggle('far', !liked);
+                icon.classList.toggle('fas', liked);
+                var rateEl = btn.closest('.rate_like');
+                if (rateEl) rateEl.classList.toggle('likeRate', liked);
+            } else {
+                btn.textContent = liked ? '\u2665' : '\u2661';
+            }
 
             var counter = btn.nextElementSibling;
             if (counter) {

@@ -92,7 +92,7 @@
     @endphp
 
     <div class="col-xl-12">
-        <div id="song_{{ $material->id }}" audio_url="{{ $audioUrl }}" class="aduio_player">
+        <div id="song_{{ $material->id }}" audio_url="{{ $audioUrl }}" class="aduio_player list-style-old">
             <div class="play_l_btn">
                 @if($material->hasFile())
                     <button type="button" class="play_audio" aria-label="Воспроизвести"><i class="far fa-play-circle"></i> <i class="far fa-pause-circle"></i></button>
@@ -105,14 +105,16 @@
                 <span class="time"><i class="far fa-clock"></i> <time>{{ $durationStr }}</time></span>
                 <span class="dwnld"><i class="fas fa-download"></i> {{ number_format($material->downloads ?? 0) }}</span>
             </div>
-            <div class="like-container">
-                <button type="button" class="like-btn {{ session()->has('liked_' . $material->id) ? 'liked' : '' }}"
+            @php $isLiked = session()->has('liked_' . $material->id); @endphp
+            <span class="rate_like {{ $isLiked ? 'likeRate' : '' }}" id="lRate_{{ $material->id }}">
+                <button type="button" class="like-btn" aria-label="{{ $isLiked ? 'Убрать лайк' : 'Нравится' }}"
                     data-like-url="{{ route('materials.like', $material->slug) }}"
                     data-dislike-url="{{ route('materials.dislike', $material->slug) }}"
-                    title="{{ session()->has('liked_' . $material->id) ? 'Убрать лайк' : 'Нравится' }}"
-                    aria-label="{{ session()->has('liked_' . $material->id) ? 'Убрать лайк' : 'Нравится' }}">{{ session()->has('liked_' . $material->id) ? '♥' : '♡' }}</button>
+                    title="{{ $isLiked ? 'Убрать лайк' : 'Нравится' }}">
+                    <i class="fa-heart {{ $isLiked ? 'fas' : 'far' }}"></i>
+                </button>
                 <span class="like-count" id="vcount_{{ $material->id }}">{{ $material->likes ?? 0 }}</span>
-            </div>
+            </span>
         </div>
     </div>
 
@@ -189,7 +191,8 @@
                 $relUrl = $rel->hasFile() ? $rel->fileUrl() : '';
             @endphp
             <div class="col-xl-6">
-                <div id="song_rel_{{ $rel->id }}" audio_url="{{ $relUrl }}" class="aduio_player">
+                @php $relLiked = session()->has('liked_' . $rel->id); @endphp
+                <div id="song_rel_{{ $rel->id }}" audio_url="{{ $relUrl }}" class="aduio_player list-style-old">
                     <div class="play_l_btn">
                         @if($rel->hasFile())
                             <button type="button" class="play_audio" aria-label="Воспроизвести"><i class="far fa-play-circle"></i> <i class="far fa-pause-circle"></i></button>
@@ -202,14 +205,15 @@
                         <span class="time"><i class="far fa-clock"></i> <time>{{ $relDuration }}</time></span>
                         <span class="dwnld"><i class="fas fa-download"></i> {{ number_format($rel->downloads ?? 0) }}</span>
                     </div>
-                    <div class="like-container">
-                        <button type="button" class="like-btn {{ session()->has('liked_' . $rel->id) ? 'liked' : '' }}"
+                    <span class="rate_like {{ $relLiked ? 'likeRate' : '' }}" id="lRate_{{ $rel->id }}">
+                        <button type="button" class="like-btn" aria-label="{{ $relLiked ? 'Убрать лайк' : 'Нравится' }}"
                             data-like-url="{{ route('materials.like', $rel->slug) }}"
                             data-dislike-url="{{ route('materials.dislike', $rel->slug) }}"
-                            title="{{ session()->has('liked_' . $rel->id) ? 'Убрать лайк' : 'Нравится' }}"
-                            aria-label="{{ session()->has('liked_' . $rel->id) ? 'Убрать лайк' : 'Нравится' }}">{{ session()->has('liked_' . $rel->id) ? '♥' : '♡' }}</button>
+                            title="{{ $relLiked ? 'Убрать лайк' : 'Нравится' }}">
+                            <i class="fa-heart {{ $relLiked ? 'fas' : 'far' }}"></i>
+                        </button>
                         <span class="like-count" id="vcount_rel_{{ $rel->id }}">{{ $rel->likes ?? 0 }}</span>
-                    </div>
+                    </span>
                 </div>
             </div>
         @endforeach

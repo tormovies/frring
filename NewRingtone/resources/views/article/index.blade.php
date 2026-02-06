@@ -93,15 +93,17 @@
                         <div class="audio-actions-list">
                             <a class="btn btn-secondary" href="{{ route('articles.show', $article->slug) }}">Читать</a>
 
-                            <div class="like-container">
-                                <button type="button"
-                                   class="like-btn {{ session()->has('liked_article_'.$article->id) ? 'liked' : '' }}"
+                            @php $isLikedArt = session()->has('liked_article_'.$article->id); @endphp
+                            <span class="rate_like {{ $isLikedArt ? 'likeRate' : '' }}">
+                                <button type="button" class="like-btn"
                                    data-like-url="{{ route('articles.like', $article->slug) }}"
                                    data-dislike-url="{{ route('articles.dislike', $article->slug) }}"
-                                   title="{{ session()->has('liked_article_'.$article->id) ? 'Убрать лайк' : 'Поставить лайк' }}"
-                                   aria-label="{{ session()->has('liked_article_'.$article->id) ? 'Убрать лайк' : 'Поставить лайк' }}">{{ session()->has('liked_article_'.$article->id) ? '♥' : '♡' }}</button>
+                                   title="{{ $isLikedArt ? 'Убрать лайк' : 'Поставить лайк' }}"
+                                   aria-label="{{ $isLikedArt ? 'Убрать лайк' : 'Поставить лайк' }}">
+                                    <i class="fa-heart {{ $isLikedArt ? 'fas' : 'far' }}"></i>
+                                </button>
                                 <span class="like-count">{{ $article->likes }}</span>
-                            </div>
+                            </span>
                         </div>
                     </div>
                 @empty
@@ -149,15 +151,17 @@
                             <div class="audio-stats-grid">
                                 👁 {{ number_format($article->views) }} • ♥ {{ number_format($article->likes) }}
                             </div>
-                            <div class="audio-likes-grid">
-                                <button type="button"
-                                   class="like-btn {{ session()->has('liked_article_'.$article->id) ? 'liked' : '' }}"
+                            @php $isLikedArtGrid = session()->has('liked_article_'.$article->id); @endphp
+                            <span class="rate_like {{ $isLikedArtGrid ? 'likeRate' : '' }}">
+                                <button type="button" class="like-btn"
                                    data-like-url="{{ route('articles.like', $article->slug) }}"
                                    data-dislike-url="{{ route('articles.dislike', $article->slug) }}"
-                                   title="{{ session()->has('liked_article_'.$article->id) ? 'Убрать лайк' : 'Поставить лайк' }}"
-                                   aria-label="{{ session()->has('liked_article_'.$article->id) ? 'Убрать лайк' : 'Поставить лайк' }}">{{ session()->has('liked_article_'.$article->id) ? '♥' : '♡' }}</button>
-                                <span class="like-count-grid">{{ $article->likes }}</span>
-                            </div>
+                                   title="{{ $isLikedArtGrid ? 'Убрать лайк' : 'Поставить лайк' }}"
+                                   aria-label="{{ $isLikedArtGrid ? 'Убрать лайк' : 'Поставить лайк' }}">
+                                    <i class="fa-heart {{ $isLikedArtGrid ? 'fas' : 'far' }}"></i>
+                                </button>
+                                <span class="like-count">{{ $article->likes }}</span>
+                            </span>
                         </div>
                     </div>
                 @endforeach
