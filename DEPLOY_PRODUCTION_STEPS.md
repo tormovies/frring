@@ -1,7 +1,24 @@
 # Деплой на продакшен (freeringtones.ru)
 
-Сервер: `/home/admin/domains/freeringtones.ru`  
+Сервер: `root@195.62.53.151` (DirectAdmin)  
+Путь к проекту: `/home/admin/domains/freeringtones.ru/laravel`  
 Раньше сайт был в `public_html`. Ставим Laravel из репозитория.
+
+## PHP и Composer (обязательно!)
+
+На сервере по умолчанию `php` → PHP 7.4. Laravel требует PHP 8.2+. Используй:
+
+- **PHP 8.3:** `/usr/local/php83/bin/php`
+- **Composer:** `/usr/local/bin/composer` (вызывать через PHP 8.3!)
+
+```bash
+# Composer (обязательно с PHP 8.3!)
+/usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader
+
+# Artisan
+/usr/local/php83/bin/php artisan migrate --force
+/usr/local/php83/bin/php artisan optimize
+```
 
 ---
 
@@ -219,11 +236,10 @@ cd /home/admin/domains/freeringtones.ru/laravel
 
 git pull origin master
 
-composer install --no-dev --optimize-autoloader
-# при необходимости: php8.3 /path/to/composer install --no-dev --optimize-autoloader
+# Composer и artisan — только через PHP 8.3! (см. раздел выше)
+/usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader
 
-php artisan migrate --force
-# при необходимости: php8.3 artisan migrate --force
+/usr/local/php83/bin/php artisan migrate --force
 ```
 
 Если менялся фронт (Vite/Blade):
@@ -236,11 +252,18 @@ npm run build
 Очистка и кеш для продакшена:
 
 ```bash
-php artisan optimize:clear
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-# или одной командой: php artisan optimize
+/usr/local/php83/bin/php artisan optimize:clear
+/usr/local/php83/bin/php artisan config:cache
+/usr/local/php83/bin/php artisan route:cache
+/usr/local/php83/bin/php artisan view:cache
+# или одной командой:
+/usr/local/php83/bin/php artisan optimize
+```
+
+**Быстрая команда (всё в одной строке):**
+
+```bash
+cd /home/admin/domains/freeringtones.ru/laravel && git pull origin master && /usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader && /usr/local/php83/bin/php artisan migrate --force && /usr/local/php83/bin/php artisan optimize:clear && /usr/local/php83/bin/php artisan optimize
 ```
 
 Проверка: открыть https://freeringtones.ru и cp1 (воспроизведение/скачивание рингтонов).

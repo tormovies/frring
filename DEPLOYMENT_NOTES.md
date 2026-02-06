@@ -1,36 +1,42 @@
 # Заметки по развертыванию (Deployment Notes)
 
-## Composer на продакшене
+---
+
+## freeringtones.ru (DirectAdmin, root@195.62.53.151)
+
+**PHP 8.3:** `/usr/local/php83/bin/php`  
+**Composer:** `/usr/local/bin/composer` (вызывать через PHP 8.3!)
+
+```bash
+cd /home/admin/domains/freeringtones.ru/laravel
+
+/usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader
+/usr/local/php83/bin/php artisan migrate --force
+/usr/local/php83/bin/php artisan optimize
+```
+
+Подробнее: `DEPLOY_PRODUCTION_STEPS.md`, `DEPLOY_FREERINGTONES.txt`
+
+---
+
+## neurozvuk.ru (Beget, adminfeg@adminfeg.beget.tech)
 
 ### Расположение Composer
 
 - **Composer 2**: `/home/a/adminfeg/.local/bin/composer` (версия 2.2.25)
-- **Composer 1**: `/usr/local/bin/composer-phar` (версия 1.10.26) - **НЕ ИСПОЛЬЗОВАТЬ** для Laravel 12
-- **PHP 8.3 wrapper для composer**: `/usr/local/bin/composer-php8.3` - использует Composer 1, **НЕ ИСПОЛЬЗОВАТЬ**
+- **Composer 1**: `/usr/local/bin/composer-phar` - **НЕ ИСПОЛЬЗОВАТЬ** для Laravel 12
 
 ### Правильные команды для продакшена
 
-**Для обновления автозагрузчика:**
 ```bash
 cd ~/neurozvuk.ru/laravel
 php8.3 /home/a/adminfeg/.local/bin/composer dump-autoload --no-scripts
-```
-
-**Для установки зависимостей:**
-```bash
-cd ~/neurozvuk.ru/laravel
 php8.3 /home/a/adminfeg/.local/bin/composer install --no-scripts
+php8.3 artisan optimize:clear
+php8.3 artisan optimize
 ```
 
-**Важно:** 
-- Laravel 12 требует Composer 2 (composer-runtime-api ^2.2)
-- Всегда использовать PHP 8.3: `php8.3`
-- Использовать `--no-scripts` если возникают проблемы с post-autoload-dump скриптами
-
-### Путь к PHP 8.3
-
-- PHP 8.3 доступен через команду `php8.3`
-- Проверка версии: `php8.3 -v`
+**Важно:** PHP 8.3 доступен через команду `php8.3`
 
 ## Очистка кеша после изменений
 
