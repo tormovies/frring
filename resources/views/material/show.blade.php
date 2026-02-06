@@ -54,13 +54,6 @@
             : '0:00';
         $audioUrl = $material->hasFile() ? $material->fileUrl() : '';
         $size = (int) ($material->mp4_size ?? 0);
-        if ($size === 0 && $material->hasFile() && $material->mp4) {
-            try {
-                $size = \Illuminate\Support\Facades\Storage::disk('mp4')->size(ltrim($material->mp4, '/'));
-            } catch (Exception $e) {
-                $size = 0;
-            }
-        }
         $formatted = $size
             ? ($size >= 1048576
                 ? number_format($size / 1048576, 2) . ' MB'
@@ -68,24 +61,14 @@
             : '—';
 
         $m4rFile = null;
-        $m4rSize = 0;
-        if ($material->m4r30 && \Illuminate\Support\Facades\Storage::disk('m4r30')->exists(ltrim($material->m4r30, '/'))) {
+        if ($material->m4r30) {
             $m4rFile = 'm4r30';
-            try {
-                $m4rSize = \Illuminate\Support\Facades\Storage::disk('m4r30')->size(ltrim($material->m4r30, '/'));
-            } catch (Exception $e) {}
-        } elseif ($material->m4r40 && \Illuminate\Support\Facades\Storage::disk('m4r40')->exists(ltrim($material->m4r40, '/'))) {
+        } elseif ($material->m4r40) {
             $m4rFile = 'm4r40';
-            try {
-                $m4rSize = \Illuminate\Support\Facades\Storage::disk('m4r40')->size(ltrim($material->m4r40, '/'));
-            } catch (Exception $e) {}
-        }
-        if (!$m4rFile && $material->m4rFileUrl()) {
+        } elseif ($material->m4rFileUrl()) {
             $m4rFile = 'm4r30';
         }
-        $m4rFormatted = $m4rSize
-            ? ($m4rSize >= 1048576 ? number_format($m4rSize / 1048576, 2) . ' MB' : number_format($m4rSize / 1024, 2) . ' KB')
-            : '—';
+        $m4rFormatted = '—';
         $bitrate = $material->mp4_bitrate
             ? ($material->mp4_bitrate >= 1000 ? round($material->mp4_bitrate / 1000) : $material->mp4_bitrate) . ' kb/s'
             : '128 kb/s';

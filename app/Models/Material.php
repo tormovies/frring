@@ -62,18 +62,13 @@ class Material extends Model
         });
     }
 
+    /** Есть ли файл — по данным БД, без обращения к диску. */
     public function hasFile(): bool
     {
-        if (!$this->mp4) {
-            return false;
-        }
-        // Если настроен CDN — не проверяем диск (экономия I/O при выводе списков)
-        if (config('services.ringtone_cdn.url')) {
-            return true;
-        }
-        return Storage::disk('mp4')->exists(ltrim($this->mp4, '/'));
+        return !empty($this->mp4);
     }
 
+    /** URL файла — по данным БД и конфигу, без проверки диска. */
     public function fileUrl(): ?string
     {
         if (!$this->mp4) {
@@ -81,15 +76,11 @@ class Material extends Model
         }
         $path = ltrim($this->mp4, '/');
         $base = rtrim((string) config('services.ringtone_cdn.url'), '/');
-        // При настроенном CDN сразу отдаём URL CDN (без проверки диска — меньше I/O в списках)
         if ($base !== '') {
             $path = str_starts_with($path, 'mp3/') || str_starts_with($path, 'm4r/') ? $path : 'mp3/' . $path;
             return $base . '/' . $path;
         }
-        if (Storage::disk('mp4')->exists($path)) {
-            return Storage::disk('mp4')->url($path);
-        }
-        return null;
+        return Storage::disk('mp4')->url($path);
     }
 
     /** URL для скачивания m4r (если есть на CDN). */
