@@ -109,8 +109,8 @@
 @endsection
 
 @push('scripts')
-<link href="{{ asset('js/quill/quill.snow.css') }}" rel="stylesheet">
-<script src="{{ asset('js/quill/quill.js') }}"></script>
+<link href="/js/quill/quill.snow.css" rel="stylesheet">
+<script src="/js/quill/quill.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var quill = new Quill('#content-editor', {

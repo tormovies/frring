@@ -58,5 +58,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/player-old.js') }}"></script>
+<script src="/js/player-old.js"></script>
 @endpush

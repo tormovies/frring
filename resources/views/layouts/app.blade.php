@@ -19,9 +19,9 @@
     <meta name="twitter:description" content="@yield('og_description', '')">
     <meta name="twitter:image" content="@yield('og_image', asset('img/logo.png'))">
     <link rel="canonical" href="@yield('canonical', url()->current())">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon/120.svg') }}">
-    <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon/120.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/styles.css">
     @stack('json-ld')
     @stack('head')
 </head>

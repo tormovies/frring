@@ -39,6 +39,6 @@
 
 @push('scripts')
 @if($term && $materials->isNotEmpty())
-<script src="{{ asset('js/player-old.js') }}"></script>
+<script src="/js/player-old.js"></script>
 @endif
 @endpush

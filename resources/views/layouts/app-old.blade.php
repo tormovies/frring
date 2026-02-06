@@ -7,7 +7,7 @@
     <title>@yield('title', $seo['title'] ?? config('app.name'))</title>
     <meta name="description" content="@yield('description', $seo['description'] ?? '')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     {{-- Критический CSS: первый экран (шапка, top-bar, отступ контента) — меньше FOUC до загрузки основных стилей --}}
     <style>
@@ -21,10 +21,10 @@
     @media (max-width:767px){.container-fluid{padding-right:30px}}
     @media (max-width:450px){.container-fluid{padding-left:15px;padding-right:15px}.top-line{left:0}.section_content{padding-top:60px}header.header{width:60px}}
     </style>
-    <link rel="stylesheet" href="{{ asset('css/grid.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style-old-site.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/fonts-local.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/fontawesome/all.min.css') }}">
+    <link rel="stylesheet" href="/css/grid.min.css">
+    <link rel="stylesheet" href="/css/style-old-site.css">
+    <link rel="stylesheet" href="/css/fonts-local.css">
+    <link rel="stylesheet" href="/css/fontawesome/all.min.css">
     @stack('head')
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -43,7 +43,7 @@
     {{-- Левый фиксированный блок: логотип, бургер, категории, наверх --}}
     <header class="header">
         <a href="{{ url('/') }}" class="logo">
-            <img src="{{ asset('img/logo.jpg') }}" alt="{{ config('app.name') }}" width="180" height="50" onerror="this.style.display='none';">
+            <img src="/img/logo.jpg" alt="{{ config('app.name') }}" width="180" height="50" onerror="this.style.display='none';">
         </a>
         <a href="#navig" class="nav_burger btn-open" rel="navig" aria-label="Меню"><span></span></a>
         <a href="#category" class="category-nav btn-open" rel="category"><i class="fas fa-music"></i> <span>Категории</span></a>
@@ -80,7 +80,7 @@
         </footer>
     </div>
 
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="/js/jquery-3.6.0.min.js"></script>
     <script>
     document.createElement('header');
     document.createElement('nav');
@@ -123,7 +123,7 @@
         });
     });
     </script>
-    <script src="{{ asset('js/script.js') }}" defer></script>
+    <script src="/js/script.js" defer></script>
     @stack('scripts')
 </body>
 </html>

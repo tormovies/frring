@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Личный кабинет') - {{ config('app.name', 'NeuroZvuk') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
         /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {

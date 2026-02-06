@@ -7,7 +7,7 @@
     <div class="quill-editor-{{ $uniqueId }}" style="min-height: 200px; border: 1px solid #e5e7eb; border-radius: 6px; background: #ffffff;"></div>
 </div>
 
-<link href="{{ asset('js/quill/quill.snow.css') }}" rel="stylesheet">
+<link href="/js/quill/quill.snow.css" rel="stylesheet">
 <script>
 (function() {
     var uniqueId = '{{ $uniqueId }}';
@@ -68,7 +68,7 @@
     } else {
         // Если Quill еще не загружен, ждем его загрузки
         var script = document.createElement('script');
-        script.src = '{{ asset("js/quill/quill.js") }}';
+        script.src = '/js/quill/quill.js';
         script.onload = function() {
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initQuillPreview);
