@@ -74,23 +74,35 @@ class MaterialController extends Controller
         $path = $material->{$field};
         $pathTrim = $path ? ltrim($path, '/') : '';
 
-        $authors = $material->authors->pluck('name')->implode(', ');
+        $authors = $material->authors?->pluck('name')->implode(', ') ?? '';
         $filename = trim(($authors ? $authors . ' - ' : '') . $material->name);
         $extension = pathinfo($path ?? '', PATHINFO_EXTENSION) ?: ($field === 'mp4' ? 'mp3' : 'm4r');
         $safeName = Str::slug($filename, '-') . '.' . strtolower($extension);
 
         // Локальный файл — отдаём потоком с принудительным скачиванием
-        if ($pathTrim && Storage::disk($field)->exists($pathTrim)) {
-            $material->increment('downloads');
-            return Storage::disk($field)->download($pathTrim, $safeName, [
-                'Content-Disposition' => 'attachment; filename="' . str_replace('"', '\\"', $safeName) . '"',
-            ]);
+        if ($pathTrim) {
+            try {
+                if (Storage::disk($field)->exists($pathTrim)) {
+                    $material->increment('downloads');
+                    return Storage::disk($field)->download($pathTrim, $safeName, [
+                        'Content-Disposition' => 'attachment; filename="' . str_replace('"', '\\"', $safeName) . '"',
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                // диск недоступен или сломан — идём в ветку CDN
+            }
         }
 
         // Файл на CDN — только редирект (без проксирования, без нагрузки на сервер)
-        if ($field === 'mp4' && $material->mp4 && $material->fileUrl()) {
-            $material->increment('downloads');
-            return redirect()->away($material->fileUrl());
+        if ($field === 'mp4' && $material->mp4) {
+            $url = $material->fileUrl();
+            if (!$url) {
+                $url = $this->buildCdnUrlForMp4($material->mp4);
+            }
+            if ($url) {
+                $material->increment('downloads');
+                return redirect()->away($url);
+            }
         }
 
         if (($field === 'm4r30' || $field === 'm4r40') && $material->m4rFileUrl()) {
@@ -99,6 +111,21 @@ class MaterialController extends Controller
         }
 
         abort(404);
+    }
+
+    /** URL для mp3 на CDN (если fileUrl() вернул null из‑за кеша/конфига). */
+    private function buildCdnUrlForMp4(?string $mp4Path): ?string
+    {
+        if (!$mp4Path) {
+            return null;
+        }
+        $base = rtrim((string) config('services.ringtone_cdn.url'), '/');
+        if ($base === '') {
+            return null;
+        }
+        $path = ltrim($mp4Path, '/');
+        $path = str_starts_with($path, 'mp3/') || str_starts_with($path, 'm4r/') ? $path : 'mp3/' . $path;
+        return $base . '/' . $path;
     }
 
     public function like(string $slug): JsonResponse|RedirectResponse
