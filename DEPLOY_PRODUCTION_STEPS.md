@@ -31,21 +31,23 @@ ls -la
 
 ## 2. Клонирование репозитория
 
-Клонируй репозиторий в текущую папку (получится структура: NewRingtone/, .git, README и т.д.):
+В репозитории Laravel-приложение в **корне** (app/, public/, config/ и т.д. сразу в корне репо).
+
+Клонируй в папку приложения (например `laravel`):
+
+```bash
+cd /home/admin/domains/freeringtones.ru
+git clone https://github.com/tormovies/frring.git laravel
+```
+
+Либо в текущую папку, если она пустая (кроме public_html-old):
 
 ```bash
 cd /home/admin/domains/freeringtones.ru
 git clone https://github.com/tormovies/frring.git .
 ```
 
-Если папка не пустая (остались файлы кроме public_html-old), клонируй в подпапку и потом перенеси:
-
-```bash
-git clone https://github.com/tormovies/frring.git repo-tmp
-mv repo-tmp/* repo-tmp/.[!.]* . 2>/dev/null; rmdir repo-tmp
-```
-
-Laravel-приложение лежит в **NewRingtone/**.
+Дальше в инструкции подставь свой каталог приложения: `laravel` или `.` (текущий).
 
 ---
 
@@ -55,11 +57,11 @@ Laravel-приложение лежит в **NewRingtone/**.
 
 - **Nginx:** в конфиге виртуального хоста поменяй `root` на:
   ```
-  root /home/admin/domains/freeringtones.ru/NewRingtone/public;
+  root /home/admin/domains/freeringtones.ru/laravel/public;
   ```
 - **Apache:** в конфиге хоста поменяй `DocumentRoot` на:
   ```
-  DocumentRoot /home/admin/domains/freeringtones.ru/NewRingtone/public
+  DocumentRoot /home/admin/domains/freeringtones.ru/laravel/public
   ```
   И добавь блок с `Directory` для этой папки с `AllowOverride All` (если используешь .htaccess).
 
@@ -82,10 +84,10 @@ FLUSH PRIVILEGES;
 
 ---
 
-## 5. Файл .env в NewRingtone
+## 5. Файл .env
 
 ```bash
-cd /home/admin/domains/freeringtones.ru/NewRingtone
+cd /home/admin/domains/freeringtones.ru/laravel
 cp .env.example .env
 php artisan key:generate
 ```
@@ -112,7 +114,7 @@ DB_PASSWORD=надежный_пароль
 ## 6. Зависимости и миграции
 
 ```bash
-cd /home/admin/domains/freeringtones.ru/NewRingtone
+cd /home/admin/domains/freeringtones.ru/laravel
 composer install --no-dev --optimize-autoloader
 php artisan migrate --force
 ```
@@ -130,7 +132,7 @@ php artisan migrate:status
 ## 7. Права и ссылки
 
 ```bash
-cd /home/admin/domains/freeringtones.ru/NewRingtone
+cd /home/admin/domains/freeringtones.ru/laravel
 php artisan storage:link
 chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
@@ -143,7 +145,7 @@ chown -R www-data:www-data storage bootstrap/cache
 ## 8. Статика (если нужна сборка фронта)
 
 ```bash
-cd /home/admin/domains/freeringtones.ru/NewRingtone
+cd /home/admin/domains/freeringtones.ru/laravel
 npm ci
 npm run build
 ```
@@ -174,8 +176,8 @@ npm run build
 ## 11. Текущая структура на сервере (актуальная)
 
 - Домен: `/home/admin/domains/freeringtones.ru`
-- Laravel: в папке **laravel/** (или **NewRingtone/** — в зависимости от того, как клонировали).
-- Document root: **public_html** — симлинк на `laravel/public` (или `NewRingtone/public`).
+- Laravel: в папке **laravel/** (корень репозитория после клонирования).
+- Document root: **public_html** — симлинк на `laravel/public`.
 - Старый сайт: **public_html-old**
 - Субдомен cp1.freeringtones.ru: **cp1/** — симлинки `mp3` и `m4r` ведут в `laravel/storage/app/public/mp4` и `m4r30`.
 
@@ -188,14 +190,9 @@ npm run build
 Когда выкатываешь новую версию после правок в репозитории:
 
 ```bash
-cd /home/admin/domains/freeringtones.ru
-# Если приложение в папке NewRingtone:
-# cd NewRingtone
-# Если переименовано в laravel:
-cd laravel
+cd /home/admin/domains/freeringtones.ru/laravel
 
-git pull origin main
-# или: git pull origin master
+git pull origin master
 
 composer install --no-dev --optimize-autoloader
 # при необходимости: php8.3 /path/to/composer install --no-dev --optimize-autoloader
