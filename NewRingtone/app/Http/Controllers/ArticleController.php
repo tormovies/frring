@@ -44,7 +44,8 @@ class ArticleController extends Controller
 
         $tagIds = $article->tags()->pluck('tags.id');
 
-        $related = Material::whereHas('tags', fn($q) => $q->whereIn('tags.id', $tagIds))
+        $related = Material::with(['type', 'authors'])
+            ->whereHas('tags', fn($q) => $q->whereIn('tags.id', $tagIds))
             ->active()
             ->latest()
             ->limit(10)

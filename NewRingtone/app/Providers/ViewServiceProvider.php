@@ -11,20 +11,25 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('layouts.sidebar-left', function ($view) {
-            $popularMaterials = Material::active()
-                ->orderByDesc('views')
-                ->limit(15)
-                ->get();
+            $cacheKey = 'sidebar_materials';
+            $cacheTtl = now()->addMinutes(10);
 
-            $topMaterials = Material::active()
-                ->orderByDesc('likes')
-                ->limit(15)
-                ->get();
+            $data = cache()->remember($cacheKey, $cacheTtl, function () {
+                return [
+                    'popularMaterials' => Material::active()
+                        ->with(['type', 'authors'])
+                        ->orderByDesc('views')
+                        ->limit(15)
+                        ->get(),
+                    'topMaterials' => Material::active()
+                        ->with(['type', 'authors'])
+                        ->orderByDesc('likes')
+                        ->limit(15)
+                        ->get(),
+                ];
+            });
 
-            $view->with([
-                'popularMaterials' => $popularMaterials,
-                'topMaterials'     => $topMaterials,
-            ]);
+            $view->with($data);
         });
     }
 }

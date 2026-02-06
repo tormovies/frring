@@ -29,8 +29,10 @@ Route::get('/robots.txt', function () {
     ]);
 })->name('robots');
 
-// Главная
+// Главная (без пагинации) и новинки по offset: /index-24-date.html, /index-48-date.html
 Route::get('/', [MainController::class, 'index'])->name('home');
+Route::get('/index-0-date.html', fn () => redirect()->route('home', [], 301));
+Route::get('/index-{offset}-date.html', [MainController::class, 'indexWithOffset'])->name('home.offset')->where('offset', '[0-9]+');
 
 // URL как на старом сайте (SEO): /play/{slug}.html, /category/{slug}.html, /page/{slug}.html
 // Рингтоны (материалы) — старый формат /play/alias.html

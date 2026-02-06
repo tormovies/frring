@@ -60,7 +60,8 @@ class MaterialController extends Controller
      */
     public function download(string $slug, string $format): StreamedResponse|RedirectResponse
     {
-        $material = Material::active()
+        $material = Material::with('authors')
+            ->active()
             ->where('slug', $slug)
             ->firstOrFail();
         $field = match ($format) {

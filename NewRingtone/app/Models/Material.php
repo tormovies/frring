@@ -67,9 +67,11 @@ class Material extends Model
         if (!$this->mp4) {
             return false;
         }
-        // Файл есть, если лежит локально или доступен с CDN (cp1.freeringtones.ru)
-        return Storage::disk('mp4')->exists(ltrim($this->mp4, '/'))
-            || (bool) config('services.ringtone_cdn.url');
+        // Если настроен CDN — не проверяем диск (экономия I/O при выводе списков)
+        if (config('services.ringtone_cdn.url')) {
+            return true;
+        }
+        return Storage::disk('mp4')->exists(ltrim($this->mp4, '/'));
     }
 
     public function fileUrl(): ?string
@@ -78,14 +80,14 @@ class Material extends Model
             return null;
         }
         $path = ltrim($this->mp4, '/');
-        if (Storage::disk('mp4')->exists($path)) {
-            return Storage::disk('mp4')->url($path);
-        }
-        // Скачивание и воспроизведение с удалённого CDN (как на старом сайте)
         $base = rtrim((string) config('services.ringtone_cdn.url'), '/');
+        // При настроенном CDN сразу отдаём URL CDN (без проверки диска — меньше I/O в списках)
         if ($base !== '') {
             $path = str_starts_with($path, 'mp3/') || str_starts_with($path, 'm4r/') ? $path : 'mp3/' . $path;
             return $base . '/' . $path;
+        }
+        if (Storage::disk('mp4')->exists($path)) {
+            return Storage::disk('mp4')->url($path);
         }
         return null;
     }
