@@ -183,6 +183,31 @@ npm run build
 
 В `.env` должен быть: `RINGTONE_CDN_URL=https://cp1.freeringtones.ru`
 
+### Скачивание с CDN (cp1): чтобы по ссылке файл скачивался, а не открывался в вкладке
+
+Если при редиректе на cp1 файл воспроизводится в браузере вместо скачивания — добавь на **cp1** заголовок `Content-Disposition: attachment` для аудио.
+
+**Apache** (в конфиге виртуального хоста cp1 или в .htaccess в каталоге mp3/m4r):
+
+```apache
+<IfModule mod_headers.c>
+    <FilesMatch "\.(mp3|m4r)$">
+        Header set Content-Disposition "attachment"
+    </FilesMatch>
+</IfModule>
+```
+
+**Nginx** (в `location` для /mp3 и /m4r):
+
+```nginx
+location ~* \.(mp3|m4r)$ {
+    add_header Content-Disposition 'attachment';
+    # ... остальная конфигурация (root, alias и т.д.)
+}
+```
+
+После правок перезапусти веб-сервер cp1.
+
 ---
 
 ## 12. Обновление кода на продакшене (релиз)

@@ -87,42 +87,18 @@ class MaterialController extends Controller
             ]);
         }
 
-        // Файл на CDN — проксируем потоком, чтобы браузер не открывал в той же вкладке
+        // Файл на CDN — только редирект (без проксирования, без нагрузки на сервер)
         if ($field === 'mp4' && $material->mp4 && $material->fileUrl()) {
             $material->increment('downloads');
-            $url = $material->fileUrl();
-            return $this->streamDownloadFromUrl($url, $safeName, 'audio/mpeg');
+            return redirect()->away($material->fileUrl());
         }
 
         if (($field === 'm4r30' || $field === 'm4r40') && $material->m4rFileUrl()) {
             $material->increment('downloads');
-            $url = $material->m4rFileUrl();
-            return $this->streamDownloadFromUrl($url, $safeName, 'audio/x-m4r');
+            return redirect()->away($material->m4rFileUrl());
         }
 
         abort(404);
-    }
-
-    /**
-     * Скачивание файла по URL потоком с заголовком attachment (чтобы не открывался в браузере).
-     */
-    private function streamDownloadFromUrl(string $url, string $filename, string $contentType): StreamedResponse
-    {
-        return response()->streamDownload(function () use ($url) {
-            $client = new \GuzzleHttp\Client(['timeout' => 120, 'connect_timeout' => 15]);
-            $response = $client->request('GET', $url, ['stream' => true]);
-            $body = $response->getBody();
-            while (!$body->eof()) {
-                echo $body->read(65536);
-                if (ob_get_level()) {
-                    ob_flush();
-                }
-                flush();
-            }
-        }, $filename, [
-            'Content-Type' => $contentType,
-            'Content-Disposition' => 'attachment; filename="' . str_replace('"', '\\"', $filename) . '"',
-        ]);
     }
 
     public function like(string $slug): JsonResponse|RedirectResponse
