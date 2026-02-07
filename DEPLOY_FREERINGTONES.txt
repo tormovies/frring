@@ -1,11 +1,15 @@
 # Деплой freeringtones.ru (root@195.62.53.151, DirectAdmin)
 # PHP 8.3: /usr/local/php83/bin/php
 # Composer: /usr/local/bin/composer (вызывать через PHP 8.3!)
+# ВАЖНО: PHP работает от пользователя 'admin', поэтому деплой от admin, а НЕ от root!
 
 # 1. Подключение
 ssh root@195.62.53.151
 
-# 2. Деплой (по порядку)
+# 2. Переключись на admin (ОБЯЗАТЕЛЬНО!)
+su - admin
+
+# 3. Деплой (по порядку)
 cd /home/admin/domains/freeringtones.ru/laravel
 
 git pull origin master
@@ -17,11 +21,11 @@ git pull origin master
 /usr/local/php83/bin/php artisan optimize:clear
 /usr/local/php83/bin/php artisan optimize
 
-# 3. Права на storage (обязательно после composer!)
-chown -R apache:apache /home/admin/domains/freeringtones.ru/laravel/storage
-chown -R apache:apache /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache
-chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/storage
-chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache
+# 4. Всё одной строкой (из-под admin)
+cd /home/admin/domains/freeringtones.ru/laravel && git pull origin master && /usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader && /usr/local/php83/bin/php artisan migrate --force && /usr/local/php83/bin/php artisan optimize:clear && /usr/local/php83/bin/php artisan optimize
 
-# 4. Всё одной строкой
-cd /home/admin/domains/freeringtones.ru/laravel && git pull origin master && /usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader && /usr/local/php83/bin/php artisan migrate --force && chown -R apache:apache storage bootstrap/cache && chmod -R 775 storage bootstrap/cache && /usr/local/php83/bin/php artisan optimize:clear && /usr/local/php83/bin/php artisan optimize
+# ЕСЛИ деплой был от root (по ошибке), исправь права:
+# chown -R admin:admin /home/admin/domains/freeringtones.ru/laravel/storage
+# chown -R admin:admin /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache
+# chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/storage
+# chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache

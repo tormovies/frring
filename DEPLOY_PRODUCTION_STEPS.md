@@ -229,9 +229,16 @@ location ~* \.(mp3|m4r)$ {
 
 ## 12. Обновление кода на продакшене (релиз)
 
+⚠️ **ВАЖНО: PHP работает от пользователя `admin`, поэтому деплой ТОЛЬКО от admin, а НЕ от root!**
+
 Когда выкатываешь новую версию после правок в репозитории:
 
 ```bash
+# 1. Подключись и переключись на admin
+ssh root@195.62.53.151
+su - admin
+
+# 2. Деплой
 cd /home/admin/domains/freeringtones.ru/laravel
 
 git pull origin master
@@ -260,10 +267,23 @@ npm run build
 /usr/local/php83/bin/php artisan optimize
 ```
 
-**Быстрая команда (всё в одной строке):**
+**Быстрая команда (всё в одной строке, из-под admin):**
 
 ```bash
 cd /home/admin/domains/freeringtones.ru/laravel && git pull origin master && /usr/local/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader && /usr/local/php83/bin/php artisan migrate --force && /usr/local/php83/bin/php artisan optimize:clear && /usr/local/php83/bin/php artisan optimize
+```
+
+**Если деплой был от root (по ошибке), исправь права:**
+
+```bash
+# Вернись в root
+exit
+# Исправь владельца
+chown -R admin:admin /home/admin/domains/freeringtones.ru/laravel/storage
+chown -R admin:admin /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache
+chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/storage
+chmod -R 775 /home/admin/domains/freeringtones.ru/laravel/bootstrap/cache
+systemctl restart httpd
 ```
 
 Проверка: открыть https://freeringtones.ru и cp1 (воспроизведение/скачивание рингтонов).
