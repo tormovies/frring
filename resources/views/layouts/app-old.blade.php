@@ -47,6 +47,12 @@
         </a>
         <a href="#navig" class="nav_burger btn-open" rel="navig" aria-label="Меню"><span></span></a>
         <a href="#category" class="category-nav btn-open" rel="category"><i class="fas fa-music"></i> <span>Категории</span></a>
+        <div class="header_search_mobile">
+            <form action="{{ route('search') }}" method="get" role="search">
+                <input type="text" name="query" class="header_search_mobile_input" placeholder="Поиск..." value="{{ request('query') }}" aria-label="Поиск">
+                <button type="submit" class="header_search_mobile_btn" aria-label="Искать"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
         <a href="#ScrolTop" class="scroll_to_top" title="Наверх"><i class="fas fa-arrow-up"></i></a>
     </header>
 
