@@ -40,7 +40,7 @@
     <!-- /Yandex.Metrika counter -->
 </head>
 <body>
-    {{-- Левый фиксированный блок: логотип, бургер, категории, наверх --}}
+    {{-- Левый фиксированный блок: логотип, бургер, категории, наверх. На мобиле: логотип, поиск, бургер справа --}}
     <header class="header">
         <a href="{{ url('/') }}" class="logo">
             <img src="/img/logo.jpg" alt="{{ config('app.name') }}" width="180" height="50" onerror="this.style.display='none';">
@@ -53,6 +53,7 @@
                 <button type="submit" class="header_search_mobile_btn" aria-label="Искать"><i class="fas fa-search"></i></button>
             </form>
         </div>
+        <a href="#mobile_menu" class="mobile_burger btn-open" rel="mobile_menu" aria-label="Меню"><span></span></a>
         <a href="#ScrolTop" class="scroll_to_top" title="Наверх"><i class="fas fa-arrow-up"></i></a>
     </header>
 
@@ -68,7 +69,7 @@
         @include('partials.sidebar-categories')
     </div>
 
-    {{-- Левое выезжающее меню --}}
+    {{-- Левое выезжающее меню (десктоп) --}}
     <div class="navigation popup" id="navig">
         <nav>
             <ul>
@@ -86,6 +87,25 @@
         </footer>
     </div>
 
+    {{-- Мобильное объединённое меню (справа): Новые, Горячие, Хиты, Категории, Программы --}}
+    <div class="mobile_menu_combined popup" id="mobile_menu">
+        <nav class="mobile_menu_nav">
+            <ul>
+                <li><h3>Разделы</h3></li>
+                <li><a href="{{ url('/') }}"><i class="fas fa-star"></i> Новые Рингтоны</a></li>
+                <li><a href="{{ url('/category/index-0-plays.html') }}"><i class="fas fa-fire"></i> Горячие</a></li>
+                <li><a href="{{ url('/category/index-0-rating.html') }}"><i class="fas fa-music"></i> Хиты</a></li>
+            </ul>
+            <ul>
+                <li><h3>Категории</h3></li>
+            </ul>
+            @include('partials.category-links')
+            <ul>
+                <li><a href="{{ route('pages.show', 'programma-dlja-sozdanija-ringtonov') }}" title="Программы"><i class="fas fa-laptop"></i> Программы</a></li>
+            </ul>
+        </nav>
+    </div>
+
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script>
     document.createElement('header');
@@ -97,7 +117,7 @@
     </script>
     <script>
     $(function() {
-        // Бургер: открыть/закрыть левое меню
+        // Бургер: открыть/закрыть левое меню (десктоп)
         $('a[href="#navig"], .nav_burger').on('click', function(e) {
             e.preventDefault();
             $('.navigation').toggleClass('view_popup');
@@ -108,11 +128,27 @@
             e.preventDefault();
             $('.aside_right').toggleClass('view_popup');
         });
+        // Мобильный бургер: открыть/закрыть объединённое меню справа
+        $('a[href="#mobile_menu"], .mobile_burger').on('click', function(e) {
+            e.preventDefault();
+            $('.mobile_menu_combined').toggleClass('view_popup');
+            $('.mobile_burger').toggleClass('closes');
+            $('.navigation').removeClass('view_popup');
+            $('.nav_burger').removeClass('closes');
+            $('.aside_right').removeClass('view_popup');
+        });
+        // Закрыть мобильное меню при клике на ссылку внутри
+        $('.mobile_menu_combined a').on('click', function() {
+            $('.mobile_menu_combined').removeClass('view_popup');
+            $('.mobile_burger').removeClass('closes');
+        });
         // Закрыть попапы по клику вне
         $('body').on('click', function(e) {
-            if (!$(e.target).closest('.header').length && !$(e.target).closest('.navigation').length && !$(e.target).closest('.aside_right').length) {
+            if (!$(e.target).closest('.header').length && !$(e.target).closest('.navigation').length && !$(e.target).closest('.aside_right').length && !$(e.target).closest('.mobile_menu_combined').length) {
                 $('.navigation').removeClass('view_popup');
                 $('.nav_burger').removeClass('closes');
+                $('.mobile_menu_combined').removeClass('view_popup');
+                $('.mobile_burger').removeClass('closes');
                 if ($(window).width() < 768) $('.aside_right').removeClass('view_popup');
             }
         });
