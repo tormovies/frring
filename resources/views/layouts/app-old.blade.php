@@ -13,13 +13,13 @@
     <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#fff;font-size:16px;margin:0;padding:0;overflow-x:hidden;color:#627798}
-    .section_content{padding-top:120px}
+    .section_content{padding-top:75px}
     header.header{position:fixed;left:0;top:0;bottom:0;width:80px;background:#2a436a;z-index:21}
     .top-line{background:#ebeff1;height:70px;position:fixed;top:0;left:80px;right:0;z-index:20}
     .container-fluid{padding-left:110px;padding-right:380px;position:relative}
     @media (max-width:991px){.container-fluid{padding-right:295px}}
     @media (max-width:767px){.container-fluid{padding-right:30px}}
-    @media (max-width:450px){.container-fluid{padding-left:15px;padding-right:15px}.top-line{left:0}.section_content{padding-top:60px}header.header{width:60px}}
+    @media (max-width:450px){.container-fluid{padding-left:15px;padding-right:15px}.top-line{left:0}.section_content{padding-top:45px}header.header{width:60px}}
     </style>
     <link rel="stylesheet" href="/css/grid.min.css">
     <link rel="stylesheet" href="/css/style-old-site.css">

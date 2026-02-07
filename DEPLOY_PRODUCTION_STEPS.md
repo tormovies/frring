@@ -200,30 +200,24 @@ npm run build
 
 В `.env` должен быть: `RINGTONE_CDN_URL=https://cp1.freeringtones.ru`
 
-### Скачивание с CDN (cp1): чтобы по ссылке файл скачивался, а не открывался в вкладке
+### Скачивание с CDN (cp1): файл скачивается при ?download=1, плеер воспроизводит без параметра
 
-Если при редиректе на cp1 файл воспроизводится в браузере вместо скачивания — добавь на **cp1** заголовок `Content-Disposition: attachment` для аудио.
+Laravel при клике «Скачать» редиректит на `cp1.../mp3/file.mp3?download=1`. На cp1 нужно добавить заголовок `Content-Disposition: attachment` **только** при наличии параметра `download=1`.
 
-**Apache** (в конфиге виртуального хоста cp1 или в .htaccess в каталоге mp3/m4r):
+**Apache** (в Custom HTTPD для cp1.freeringtones.ru или в конфиге виртуального хоста):
 
 ```apache
 <IfModule mod_headers.c>
-    <FilesMatch "\.(mp3|m4r)$">
+    # При ?download=1 — принудительное скачивание; без параметра — плеер воспроизводит
+    <If "%{QUERY_STRING} =~ /download=1/">
         Header set Content-Disposition "attachment"
-    </FilesMatch>
+    </If>
 </IfModule>
 ```
 
-**Nginx** (в `location` для /mp3 и /m4r):
+Размести этот блок внутри `<VirtualHost *:443>` для cp1.freeringtones.ru (или в Custom HTTPD DirectAdmin для cp1). Требуется `mod_headers` (обычно включён по умолчанию).
 
-```nginx
-location ~* \.(mp3|m4r)$ {
-    add_header Content-Disposition 'attachment';
-    # ... остальная конфигурация (root, alias и т.д.)
-}
-```
-
-После правок перезапусти веб-сервер cp1.
+После правок перезапусти Apache: `systemctl restart httpd`
 
 ---
 

@@ -93,7 +93,7 @@ class MaterialController extends Controller
             }
         }
 
-        // Файл на CDN — только редирект (без проксирования, без нагрузки на сервер)
+        // Файл на CDN — редирект с ?download=1 (cp1 Apache добавит Content-Disposition: attachment)
         if ($field === 'mp4' && $material->mp4) {
             $url = $material->fileUrl();
             if (!$url) {
@@ -101,16 +101,22 @@ class MaterialController extends Controller
             }
             if ($url) {
                 $material->increment('downloads');
-                return redirect()->away($url);
+                return redirect()->away($this->appendDownloadParam($url));
             }
         }
 
         if (($field === 'm4r30' || $field === 'm4r40') && $material->m4rFileUrl()) {
             $material->increment('downloads');
-            return redirect()->away($material->m4rFileUrl());
+            return redirect()->away($this->appendDownloadParam($material->m4rFileUrl()));
         }
 
         abort(404);
+    }
+
+    /** Добавить ?download=1 к URL для принудительного скачивания (cp1 Apache отдаст Content-Disposition). */
+    private function appendDownloadParam(string $url): string
+    {
+        return str_contains($url, '?') ? $url . '&download=1' : $url . '?download=1';
     }
 
     /** URL для mp3 на CDN (если fileUrl() вернул null из‑за кеша/конфига). */
