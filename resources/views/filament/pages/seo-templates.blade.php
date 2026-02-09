@@ -4,9 +4,9 @@
         Подстановки: <code>%year%</code>, <code>%page%</code> (страница пагинации), для поиска — <code>%query%</code>.
     </p>
     <form wire:submit="save">
-        {{ $this->form }}
+        <div class="mb-6">{{ $this->form }}</div>
 
-        <div class="flex justify-end mt-6">
+        <div class="flex justify-end gap-2 border-t border-gray-200 dark:border-gray-700" style="margin-top: 2rem; padding-top: 2rem;">
             @foreach($this->getFormActions() as $action)
                 {{ $action }}
             @endforeach

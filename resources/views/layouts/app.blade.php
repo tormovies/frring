@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     @stack('json-ld')
     @stack('head')
+    @include('partials.head-script')
 </head>
 <body>
 

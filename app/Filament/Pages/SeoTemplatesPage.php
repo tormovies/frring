@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\SeoTemplate;
+use App\Models\SiteSetting;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
@@ -45,6 +46,7 @@ class SeoTemplatesPage extends Page implements HasForms
                 'h1' => $t->h1 ?? '',
             ];
         }
+        $data['head_script'] = SiteSetting::get('head_script') ?? $this->defaultHeadScript();
         $this->form->fill($data);
     }
 
@@ -79,8 +81,21 @@ class SeoTemplatesPage extends Page implements HasForms
                         ->maxLength(255)
                         ->columnSpanFull(),
                 ])
-                ->collapsible();
+                ->collapsible()
+                ->collapsed();
         }
+
+        $components[] = Section::make('Код счётчика')
+            ->description('Вставляется в шапку сайта перед </head>. Счётчик Яндекс.Метрики или другой JS/HTML.')
+            ->schema([
+                Textarea::make('head_script')
+                    ->label('Код счётчика / скрипты для <head>')
+                    ->rows(12)
+                    ->columnSpanFull()
+                    ->helperText('HTML и JavaScript. Сохраняется как есть.'),
+            ])
+            ->collapsible()
+            ->collapsed();
 
         return $components;
     }
@@ -88,7 +103,16 @@ class SeoTemplatesPage extends Page implements HasForms
     public function save(): void
     {
         $data = $this->form->getState();
+        $templateSlugs = ['home', 'search', 'popular', 'best', 'articles_index', 'material', 'category', 'page'];
+
         foreach ($data as $slug => $row) {
+            if ($slug === 'head_script') {
+                SiteSetting::set('head_script', is_string($row) ? $row : '');
+                continue;
+            }
+            if (! in_array($slug, $templateSlugs, true) || ! is_array($row)) {
+                continue;
+            }
             SeoTemplate::updateOrCreate(
                 ['slug' => $slug],
                 [
@@ -103,7 +127,7 @@ class SeoTemplatesPage extends Page implements HasForms
         Notification::make()
             ->success()
             ->title('Сохранено')
-            ->body('SEO шаблоны разделов обновлены.')
+            ->body('SEO шаблоны и код счётчика обновлены.')
             ->send();
     }
 
@@ -135,5 +159,21 @@ class SeoTemplatesPage extends Page implements HasForms
             'page' => 'Статическая страница',
             default => $slug,
         };
+    }
+
+    private function defaultHeadScript(): string
+    {
+        return '<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,\'script\',\'https://mc.yandex.ru/metrika/tag.js\', \'ym\');
+    ym(61077613, \'init\', {webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/61077613" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->';
     }
 }
