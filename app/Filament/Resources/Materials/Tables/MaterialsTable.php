@@ -20,30 +20,43 @@ class MaterialsTable
                 TextColumn::make('id')
                     ->label('ID')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable()
                     ->url(fn ($record) => route('materials.show', $record->slug))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->toggleable(),
+                TextColumn::make('type.name')
+                    ->label('Тип')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('slug')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('img')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('views')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('likes')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('downloads')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('user.name')
                     ->label('Пользователь')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('moderation_status')
                     ->label('Статус модерации')
                     ->badge()
@@ -53,23 +66,32 @@ class MaterialsTable
                         'rejected' => 'danger',
                         default => 'gray',
                     })
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('rejection_reason')
                     ->label('Причина отклонения')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true),
                 ToggleColumn::make('status')
                     ->label('Активен')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('id', 'desc')
             ->filters([
+                SelectFilter::make('type_id')
+                    ->label('Тип материала')
+                    ->relationship('type', 'name')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('moderation_status')
                     ->label('Статус модерации')
                     ->options([
