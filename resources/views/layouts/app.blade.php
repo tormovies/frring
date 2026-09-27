@@ -27,6 +27,9 @@
     @include('partials.head-script')
 </head>
 <body>
+@if($bodyScript = \App\Models\SiteSetting::get('body_script'))
+{!! $bodyScript !!}
+@endif
 
 @include('layouts.header')
 

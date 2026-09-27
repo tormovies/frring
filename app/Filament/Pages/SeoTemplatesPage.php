@@ -47,6 +47,7 @@ class SeoTemplatesPage extends Page implements HasForms
             ];
         }
         $data['head_script'] = SiteSetting::get('head_script') ?? $this->defaultHeadScript();
+        $data['body_script'] = SiteSetting::get('body_script') ?? '';
         $this->form->fill($data);
     }
 
@@ -97,6 +98,18 @@ class SeoTemplatesPage extends Page implements HasForms
             ->collapsible()
             ->collapsed();
 
+        $components[] = Section::make('JS после body')
+            ->description('Вставляется сразу после открывающего тега <body> на всех публичных страницах.')
+            ->schema([
+                Textarea::make('body_script')
+                    ->label('JS после body')
+                    ->rows(12)
+                    ->columnSpanFull()
+                    ->helperText('HTML и JavaScript. Сохраняется и выводится как есть, без преобразования в HTML-сущности.'),
+            ])
+            ->collapsible()
+            ->collapsed();
+
         return $components;
     }
 
@@ -106,8 +119,8 @@ class SeoTemplatesPage extends Page implements HasForms
         $templateSlugs = ['home', 'search', 'popular', 'best', 'articles_index', 'material', 'category', 'page'];
 
         foreach ($data as $slug => $row) {
-            if ($slug === 'head_script') {
-                SiteSetting::set('head_script', is_string($row) ? $row : '');
+            if ($slug === 'head_script' || $slug === 'body_script') {
+                SiteSetting::set($slug, is_string($row) ? $row : '');
                 continue;
             }
             if (! in_array($slug, $templateSlugs, true) || ! is_array($row)) {
@@ -127,7 +140,7 @@ class SeoTemplatesPage extends Page implements HasForms
         Notification::make()
             ->success()
             ->title('Сохранено')
-            ->body('SEO шаблоны и код счётчика обновлены.')
+            ->body('SEO шаблоны и скрипты обновлены.')
             ->send();
     }
 

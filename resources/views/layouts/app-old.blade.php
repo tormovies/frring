@@ -29,6 +29,9 @@
     @include('partials.head-script')
 </head>
 <body>
+@if($bodyScript = \App\Models\SiteSetting::get('body_script'))
+{!! $bodyScript !!}
+@endif
     {{-- Левый фиксированный блок: логотип, бургер, категории, наверх. На мобиле: логотип, поиск, бургер справа --}}
     <header class="header">
         <a href="{{ url('/') }}" class="logo">
