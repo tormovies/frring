@@ -5,11 +5,13 @@ namespace App\Filament\Resources\Materials\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MaterialsTable
 {
@@ -57,6 +59,12 @@ class MaterialsTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('categories.name')
+                    ->label('Категории')
+                    ->badge()
+                    ->limitList(3)
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('moderation_status')
                     ->label('Статус модерации')
                     ->badge()
@@ -87,6 +95,26 @@ class MaterialsTable
             ])
             ->defaultSort('id', 'desc')
             ->filters([
+                Filter::make('category')
+                    ->label('Категория (вхождение)')
+                    ->form([
+                        TextInput::make('value')
+                            ->label('Название категории содержит')
+                            ->placeholder('нарко'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $value = trim((string) ($data['value'] ?? ''));
+                        if ($value === '') {
+                            return $query;
+                        }
+
+                        return $query->whereHas('categories', fn (Builder $q): Builder => $q->where('name', 'like', '%'.$value.'%'));
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        $value = trim((string) ($data['value'] ?? ''));
+
+                        return $value !== '' ? 'Категория: '.$value : null;
+                    }),
                 SelectFilter::make('type_id')
                     ->label('Тип материала')
                     ->relationship('type', 'name')
